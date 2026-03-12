@@ -3,8 +3,8 @@ package outbox
 import (
 	"context"
 
-	"connectrpc.com/connect"
 	longrunningpb "cloud.google.com/go/longrunning/autogen/longrunningpb"
+	"connectrpc.com/connect"
 	outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 )
 

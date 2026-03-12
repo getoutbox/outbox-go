@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"connectrpc.com/connect"
 	longrunningpb "cloud.google.com/go/longrunning/autogen/longrunningpb"
+	"connectrpc.com/connect"
 	outboxv1connect "github.com/getoutbox/outbox-go/gen/outbox/v1/outboxv1connect"
 )
 

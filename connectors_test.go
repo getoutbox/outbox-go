@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"connectrpc.com/connect"
 	longrunningpb "cloud.google.com/go/longrunning/autogen/longrunningpb"
+	"connectrpc.com/connect"
 	outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 	statuspb "google.golang.org/genproto/googleapis/rpc/status"
 	"google.golang.org/protobuf/types/known/anypb"
