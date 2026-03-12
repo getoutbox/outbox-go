@@ -8,7 +8,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	v1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 	http "net/http"
 	strings "strings"
 )
@@ -57,14 +57,14 @@ const (
 type MessageServiceClient interface {
 	// Creates and sends a message. Also used for reactions (set reply_to
 	// and parts[0].disposition = REACTION) and edits (set replaced).
-	CreateMessage(context.Context, *connect.Request[outboxv1.CreateMessageRequest]) (*connect.Response[outboxv1.CreateMessageResponse], error)
+	CreateMessage(context.Context, *connect.Request[v1.CreateMessageRequest]) (*connect.Response[v1.CreateMessageResponse], error)
 	// Updates (edits) a previously sent message's content.
-	UpdateMessage(context.Context, *connect.Request[outboxv1.UpdateMessageRequest]) (*connect.Response[outboxv1.UpdateMessageResponse], error)
+	UpdateMessage(context.Context, *connect.Request[v1.UpdateMessageRequest]) (*connect.Response[v1.UpdateMessageResponse], error)
 	// Deletes a message. Returns the updated message with delete_time set.
-	DeleteMessage(context.Context, *connect.Request[outboxv1.DeleteMessageRequest]) (*connect.Response[outboxv1.DeleteMessageResponse], error)
-	ListMessages(context.Context, *connect.Request[outboxv1.ListMessagesRequest]) (*connect.Response[outboxv1.ListMessagesResponse], error)
-	SendReadReceipt(context.Context, *connect.Request[outboxv1.SendReadReceiptRequest]) (*connect.Response[outboxv1.SendReadReceiptResponse], error)
-	SendTypingIndicator(context.Context, *connect.Request[outboxv1.SendTypingIndicatorRequest]) (*connect.Response[outboxv1.SendTypingIndicatorResponse], error)
+	DeleteMessage(context.Context, *connect.Request[v1.DeleteMessageRequest]) (*connect.Response[v1.DeleteMessageResponse], error)
+	ListMessages(context.Context, *connect.Request[v1.ListMessagesRequest]) (*connect.Response[v1.ListMessagesResponse], error)
+	SendReadReceipt(context.Context, *connect.Request[v1.SendReadReceiptRequest]) (*connect.Response[v1.SendReadReceiptResponse], error)
+	SendTypingIndicator(context.Context, *connect.Request[v1.SendTypingIndicatorRequest]) (*connect.Response[v1.SendTypingIndicatorResponse], error)
 }
 
 // NewMessageServiceClient constructs a client for the outbox.v1.MessageService service. By default,
@@ -76,39 +76,39 @@ type MessageServiceClient interface {
 // http://api.acme.com or https://acme.com/grpc).
 func NewMessageServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) MessageServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	messageServiceMethods := outboxv1.File_outbox_v1_message_proto.Services().ByName("MessageService").Methods()
+	messageServiceMethods := v1.File_outbox_v1_message_proto.Services().ByName("MessageService").Methods()
 	return &messageServiceClient{
-		createMessage: connect.NewClient[outboxv1.CreateMessageRequest, outboxv1.CreateMessageResponse](
+		createMessage: connect.NewClient[v1.CreateMessageRequest, v1.CreateMessageResponse](
 			httpClient,
 			baseURL+MessageServiceCreateMessageProcedure,
 			connect.WithSchema(messageServiceMethods.ByName("CreateMessage")),
 			connect.WithClientOptions(opts...),
 		),
-		updateMessage: connect.NewClient[outboxv1.UpdateMessageRequest, outboxv1.UpdateMessageResponse](
+		updateMessage: connect.NewClient[v1.UpdateMessageRequest, v1.UpdateMessageResponse](
 			httpClient,
 			baseURL+MessageServiceUpdateMessageProcedure,
 			connect.WithSchema(messageServiceMethods.ByName("UpdateMessage")),
 			connect.WithClientOptions(opts...),
 		),
-		deleteMessage: connect.NewClient[outboxv1.DeleteMessageRequest, outboxv1.DeleteMessageResponse](
+		deleteMessage: connect.NewClient[v1.DeleteMessageRequest, v1.DeleteMessageResponse](
 			httpClient,
 			baseURL+MessageServiceDeleteMessageProcedure,
 			connect.WithSchema(messageServiceMethods.ByName("DeleteMessage")),
 			connect.WithClientOptions(opts...),
 		),
-		listMessages: connect.NewClient[outboxv1.ListMessagesRequest, outboxv1.ListMessagesResponse](
+		listMessages: connect.NewClient[v1.ListMessagesRequest, v1.ListMessagesResponse](
 			httpClient,
 			baseURL+MessageServiceListMessagesProcedure,
 			connect.WithSchema(messageServiceMethods.ByName("ListMessages")),
 			connect.WithClientOptions(opts...),
 		),
-		sendReadReceipt: connect.NewClient[outboxv1.SendReadReceiptRequest, outboxv1.SendReadReceiptResponse](
+		sendReadReceipt: connect.NewClient[v1.SendReadReceiptRequest, v1.SendReadReceiptResponse](
 			httpClient,
 			baseURL+MessageServiceSendReadReceiptProcedure,
 			connect.WithSchema(messageServiceMethods.ByName("SendReadReceipt")),
 			connect.WithClientOptions(opts...),
 		),
-		sendTypingIndicator: connect.NewClient[outboxv1.SendTypingIndicatorRequest, outboxv1.SendTypingIndicatorResponse](
+		sendTypingIndicator: connect.NewClient[v1.SendTypingIndicatorRequest, v1.SendTypingIndicatorResponse](
 			httpClient,
 			baseURL+MessageServiceSendTypingIndicatorProcedure,
 			connect.WithSchema(messageServiceMethods.ByName("SendTypingIndicator")),
@@ -119,41 +119,41 @@ func NewMessageServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 
 // messageServiceClient implements MessageServiceClient.
 type messageServiceClient struct {
-	createMessage       *connect.Client[outboxv1.CreateMessageRequest, outboxv1.CreateMessageResponse]
-	updateMessage       *connect.Client[outboxv1.UpdateMessageRequest, outboxv1.UpdateMessageResponse]
-	deleteMessage       *connect.Client[outboxv1.DeleteMessageRequest, outboxv1.DeleteMessageResponse]
-	listMessages        *connect.Client[outboxv1.ListMessagesRequest, outboxv1.ListMessagesResponse]
-	sendReadReceipt     *connect.Client[outboxv1.SendReadReceiptRequest, outboxv1.SendReadReceiptResponse]
-	sendTypingIndicator *connect.Client[outboxv1.SendTypingIndicatorRequest, outboxv1.SendTypingIndicatorResponse]
+	createMessage       *connect.Client[v1.CreateMessageRequest, v1.CreateMessageResponse]
+	updateMessage       *connect.Client[v1.UpdateMessageRequest, v1.UpdateMessageResponse]
+	deleteMessage       *connect.Client[v1.DeleteMessageRequest, v1.DeleteMessageResponse]
+	listMessages        *connect.Client[v1.ListMessagesRequest, v1.ListMessagesResponse]
+	sendReadReceipt     *connect.Client[v1.SendReadReceiptRequest, v1.SendReadReceiptResponse]
+	sendTypingIndicator *connect.Client[v1.SendTypingIndicatorRequest, v1.SendTypingIndicatorResponse]
 }
 
 // CreateMessage calls outbox.v1.MessageService.CreateMessage.
-func (c *messageServiceClient) CreateMessage(ctx context.Context, req *connect.Request[outboxv1.CreateMessageRequest]) (*connect.Response[outboxv1.CreateMessageResponse], error) {
+func (c *messageServiceClient) CreateMessage(ctx context.Context, req *connect.Request[v1.CreateMessageRequest]) (*connect.Response[v1.CreateMessageResponse], error) {
 	return c.createMessage.CallUnary(ctx, req)
 }
 
 // UpdateMessage calls outbox.v1.MessageService.UpdateMessage.
-func (c *messageServiceClient) UpdateMessage(ctx context.Context, req *connect.Request[outboxv1.UpdateMessageRequest]) (*connect.Response[outboxv1.UpdateMessageResponse], error) {
+func (c *messageServiceClient) UpdateMessage(ctx context.Context, req *connect.Request[v1.UpdateMessageRequest]) (*connect.Response[v1.UpdateMessageResponse], error) {
 	return c.updateMessage.CallUnary(ctx, req)
 }
 
 // DeleteMessage calls outbox.v1.MessageService.DeleteMessage.
-func (c *messageServiceClient) DeleteMessage(ctx context.Context, req *connect.Request[outboxv1.DeleteMessageRequest]) (*connect.Response[outboxv1.DeleteMessageResponse], error) {
+func (c *messageServiceClient) DeleteMessage(ctx context.Context, req *connect.Request[v1.DeleteMessageRequest]) (*connect.Response[v1.DeleteMessageResponse], error) {
 	return c.deleteMessage.CallUnary(ctx, req)
 }
 
 // ListMessages calls outbox.v1.MessageService.ListMessages.
-func (c *messageServiceClient) ListMessages(ctx context.Context, req *connect.Request[outboxv1.ListMessagesRequest]) (*connect.Response[outboxv1.ListMessagesResponse], error) {
+func (c *messageServiceClient) ListMessages(ctx context.Context, req *connect.Request[v1.ListMessagesRequest]) (*connect.Response[v1.ListMessagesResponse], error) {
 	return c.listMessages.CallUnary(ctx, req)
 }
 
 // SendReadReceipt calls outbox.v1.MessageService.SendReadReceipt.
-func (c *messageServiceClient) SendReadReceipt(ctx context.Context, req *connect.Request[outboxv1.SendReadReceiptRequest]) (*connect.Response[outboxv1.SendReadReceiptResponse], error) {
+func (c *messageServiceClient) SendReadReceipt(ctx context.Context, req *connect.Request[v1.SendReadReceiptRequest]) (*connect.Response[v1.SendReadReceiptResponse], error) {
 	return c.sendReadReceipt.CallUnary(ctx, req)
 }
 
 // SendTypingIndicator calls outbox.v1.MessageService.SendTypingIndicator.
-func (c *messageServiceClient) SendTypingIndicator(ctx context.Context, req *connect.Request[outboxv1.SendTypingIndicatorRequest]) (*connect.Response[outboxv1.SendTypingIndicatorResponse], error) {
+func (c *messageServiceClient) SendTypingIndicator(ctx context.Context, req *connect.Request[v1.SendTypingIndicatorRequest]) (*connect.Response[v1.SendTypingIndicatorResponse], error) {
 	return c.sendTypingIndicator.CallUnary(ctx, req)
 }
 
@@ -161,14 +161,14 @@ func (c *messageServiceClient) SendTypingIndicator(ctx context.Context, req *con
 type MessageServiceHandler interface {
 	// Creates and sends a message. Also used for reactions (set reply_to
 	// and parts[0].disposition = REACTION) and edits (set replaced).
-	CreateMessage(context.Context, *connect.Request[outboxv1.CreateMessageRequest]) (*connect.Response[outboxv1.CreateMessageResponse], error)
+	CreateMessage(context.Context, *connect.Request[v1.CreateMessageRequest]) (*connect.Response[v1.CreateMessageResponse], error)
 	// Updates (edits) a previously sent message's content.
-	UpdateMessage(context.Context, *connect.Request[outboxv1.UpdateMessageRequest]) (*connect.Response[outboxv1.UpdateMessageResponse], error)
+	UpdateMessage(context.Context, *connect.Request[v1.UpdateMessageRequest]) (*connect.Response[v1.UpdateMessageResponse], error)
 	// Deletes a message. Returns the updated message with delete_time set.
-	DeleteMessage(context.Context, *connect.Request[outboxv1.DeleteMessageRequest]) (*connect.Response[outboxv1.DeleteMessageResponse], error)
-	ListMessages(context.Context, *connect.Request[outboxv1.ListMessagesRequest]) (*connect.Response[outboxv1.ListMessagesResponse], error)
-	SendReadReceipt(context.Context, *connect.Request[outboxv1.SendReadReceiptRequest]) (*connect.Response[outboxv1.SendReadReceiptResponse], error)
-	SendTypingIndicator(context.Context, *connect.Request[outboxv1.SendTypingIndicatorRequest]) (*connect.Response[outboxv1.SendTypingIndicatorResponse], error)
+	DeleteMessage(context.Context, *connect.Request[v1.DeleteMessageRequest]) (*connect.Response[v1.DeleteMessageResponse], error)
+	ListMessages(context.Context, *connect.Request[v1.ListMessagesRequest]) (*connect.Response[v1.ListMessagesResponse], error)
+	SendReadReceipt(context.Context, *connect.Request[v1.SendReadReceiptRequest]) (*connect.Response[v1.SendReadReceiptResponse], error)
+	SendTypingIndicator(context.Context, *connect.Request[v1.SendTypingIndicatorRequest]) (*connect.Response[v1.SendTypingIndicatorResponse], error)
 }
 
 // NewMessageServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -177,7 +177,7 @@ type MessageServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewMessageServiceHandler(svc MessageServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	messageServiceMethods := outboxv1.File_outbox_v1_message_proto.Services().ByName("MessageService").Methods()
+	messageServiceMethods := v1.File_outbox_v1_message_proto.Services().ByName("MessageService").Methods()
 	messageServiceCreateMessageHandler := connect.NewUnaryHandler(
 		MessageServiceCreateMessageProcedure,
 		svc.CreateMessage,
@@ -237,26 +237,26 @@ func NewMessageServiceHandler(svc MessageServiceHandler, opts ...connect.Handler
 // UnimplementedMessageServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedMessageServiceHandler struct{}
 
-func (UnimplementedMessageServiceHandler) CreateMessage(context.Context, *connect.Request[outboxv1.CreateMessageRequest]) (*connect.Response[outboxv1.CreateMessageResponse], error) {
+func (UnimplementedMessageServiceHandler) CreateMessage(context.Context, *connect.Request[v1.CreateMessageRequest]) (*connect.Response[v1.CreateMessageResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.MessageService.CreateMessage is not implemented"))
 }
 
-func (UnimplementedMessageServiceHandler) UpdateMessage(context.Context, *connect.Request[outboxv1.UpdateMessageRequest]) (*connect.Response[outboxv1.UpdateMessageResponse], error) {
+func (UnimplementedMessageServiceHandler) UpdateMessage(context.Context, *connect.Request[v1.UpdateMessageRequest]) (*connect.Response[v1.UpdateMessageResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.MessageService.UpdateMessage is not implemented"))
 }
 
-func (UnimplementedMessageServiceHandler) DeleteMessage(context.Context, *connect.Request[outboxv1.DeleteMessageRequest]) (*connect.Response[outboxv1.DeleteMessageResponse], error) {
+func (UnimplementedMessageServiceHandler) DeleteMessage(context.Context, *connect.Request[v1.DeleteMessageRequest]) (*connect.Response[v1.DeleteMessageResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.MessageService.DeleteMessage is not implemented"))
 }
 
-func (UnimplementedMessageServiceHandler) ListMessages(context.Context, *connect.Request[outboxv1.ListMessagesRequest]) (*connect.Response[outboxv1.ListMessagesResponse], error) {
+func (UnimplementedMessageServiceHandler) ListMessages(context.Context, *connect.Request[v1.ListMessagesRequest]) (*connect.Response[v1.ListMessagesResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.MessageService.ListMessages is not implemented"))
 }
 
-func (UnimplementedMessageServiceHandler) SendReadReceipt(context.Context, *connect.Request[outboxv1.SendReadReceiptRequest]) (*connect.Response[outboxv1.SendReadReceiptResponse], error) {
+func (UnimplementedMessageServiceHandler) SendReadReceipt(context.Context, *connect.Request[v1.SendReadReceiptRequest]) (*connect.Response[v1.SendReadReceiptResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.MessageService.SendReadReceipt is not implemented"))
 }
 
-func (UnimplementedMessageServiceHandler) SendTypingIndicator(context.Context, *connect.Request[outboxv1.SendTypingIndicatorRequest]) (*connect.Response[outboxv1.SendTypingIndicatorResponse], error) {
+func (UnimplementedMessageServiceHandler) SendTypingIndicator(context.Context, *connect.Request[v1.SendTypingIndicatorRequest]) (*connect.Response[v1.SendTypingIndicatorResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.MessageService.SendTypingIndicator is not implemented"))
 }

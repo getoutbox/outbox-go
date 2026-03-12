@@ -1,0 +1,23 @@
+version: v2
+clean: true
+managed:
+  enabled: true
+  disable:
+    - file_option: go_package_prefix
+      module: buf.build/googleapis/googleapis
+    - file_option: go_package_prefix
+      module: buf.build/bufbuild/protovalidate
+  override:
+    - file_option: go_package_prefix
+      value: github.com/getoutbox/outbox-go/gen
+plugins:
+  - remote: buf.build/protocolbuffers/go:v1.36.11
+    opt: paths=source_relative
+    out: gen
+  - remote: buf.build/connectrpc/go:v1.19.1
+    opt: paths=source_relative
+    out: gen
+inputs:
+  - directory: ../../proto
+    paths:
+      - ../../proto/outbox/v1

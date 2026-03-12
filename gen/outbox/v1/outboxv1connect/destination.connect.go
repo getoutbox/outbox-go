@@ -8,7 +8,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	v1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 	http "net/http"
 	strings "strings"
 )
@@ -64,15 +64,15 @@ const (
 
 // DestinationServiceClient is a client for the outbox.v1.DestinationService service.
 type DestinationServiceClient interface {
-	CreateDestination(context.Context, *connect.Request[outboxv1.CreateDestinationRequest]) (*connect.Response[outboxv1.CreateDestinationResponse], error)
-	GetDestination(context.Context, *connect.Request[outboxv1.GetDestinationRequest]) (*connect.Response[outboxv1.GetDestinationResponse], error)
-	ListDestinations(context.Context, *connect.Request[outboxv1.ListDestinationsRequest]) (*connect.Response[outboxv1.ListDestinationsResponse], error)
-	UpdateDestination(context.Context, *connect.Request[outboxv1.UpdateDestinationRequest]) (*connect.Response[outboxv1.UpdateDestinationResponse], error)
-	DeleteDestination(context.Context, *connect.Request[outboxv1.DeleteDestinationRequest]) (*connect.Response[outboxv1.DeleteDestinationResponse], error)
-	TestDestination(context.Context, *connect.Request[outboxv1.TestDestinationRequest]) (*connect.Response[outboxv1.TestDestinationResponse], error)
-	ListDestinationTestResults(context.Context, *connect.Request[outboxv1.ListDestinationTestResultsRequest]) (*connect.Response[outboxv1.ListDestinationTestResultsResponse], error)
-	ValidateDestinationFilter(context.Context, *connect.Request[outboxv1.ValidateDestinationFilterRequest]) (*connect.Response[outboxv1.ValidateDestinationFilterResponse], error)
-	PollEvents(context.Context, *connect.Request[outboxv1.PollEventsRequest]) (*connect.Response[outboxv1.PollEventsResponse], error)
+	CreateDestination(context.Context, *connect.Request[v1.CreateDestinationRequest]) (*connect.Response[v1.CreateDestinationResponse], error)
+	GetDestination(context.Context, *connect.Request[v1.GetDestinationRequest]) (*connect.Response[v1.GetDestinationResponse], error)
+	ListDestinations(context.Context, *connect.Request[v1.ListDestinationsRequest]) (*connect.Response[v1.ListDestinationsResponse], error)
+	UpdateDestination(context.Context, *connect.Request[v1.UpdateDestinationRequest]) (*connect.Response[v1.UpdateDestinationResponse], error)
+	DeleteDestination(context.Context, *connect.Request[v1.DeleteDestinationRequest]) (*connect.Response[v1.DeleteDestinationResponse], error)
+	TestDestination(context.Context, *connect.Request[v1.TestDestinationRequest]) (*connect.Response[v1.TestDestinationResponse], error)
+	ListDestinationTestResults(context.Context, *connect.Request[v1.ListDestinationTestResultsRequest]) (*connect.Response[v1.ListDestinationTestResultsResponse], error)
+	ValidateDestinationFilter(context.Context, *connect.Request[v1.ValidateDestinationFilterRequest]) (*connect.Response[v1.ValidateDestinationFilterResponse], error)
+	PollEvents(context.Context, *connect.Request[v1.PollEventsRequest]) (*connect.Response[v1.PollEventsResponse], error)
 }
 
 // NewDestinationServiceClient constructs a client for the outbox.v1.DestinationService service. By
@@ -84,57 +84,57 @@ type DestinationServiceClient interface {
 // http://api.acme.com or https://acme.com/grpc).
 func NewDestinationServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) DestinationServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	destinationServiceMethods := outboxv1.File_outbox_v1_destination_proto.Services().ByName("DestinationService").Methods()
+	destinationServiceMethods := v1.File_outbox_v1_destination_proto.Services().ByName("DestinationService").Methods()
 	return &destinationServiceClient{
-		createDestination: connect.NewClient[outboxv1.CreateDestinationRequest, outboxv1.CreateDestinationResponse](
+		createDestination: connect.NewClient[v1.CreateDestinationRequest, v1.CreateDestinationResponse](
 			httpClient,
 			baseURL+DestinationServiceCreateDestinationProcedure,
 			connect.WithSchema(destinationServiceMethods.ByName("CreateDestination")),
 			connect.WithClientOptions(opts...),
 		),
-		getDestination: connect.NewClient[outboxv1.GetDestinationRequest, outboxv1.GetDestinationResponse](
+		getDestination: connect.NewClient[v1.GetDestinationRequest, v1.GetDestinationResponse](
 			httpClient,
 			baseURL+DestinationServiceGetDestinationProcedure,
 			connect.WithSchema(destinationServiceMethods.ByName("GetDestination")),
 			connect.WithClientOptions(opts...),
 		),
-		listDestinations: connect.NewClient[outboxv1.ListDestinationsRequest, outboxv1.ListDestinationsResponse](
+		listDestinations: connect.NewClient[v1.ListDestinationsRequest, v1.ListDestinationsResponse](
 			httpClient,
 			baseURL+DestinationServiceListDestinationsProcedure,
 			connect.WithSchema(destinationServiceMethods.ByName("ListDestinations")),
 			connect.WithClientOptions(opts...),
 		),
-		updateDestination: connect.NewClient[outboxv1.UpdateDestinationRequest, outboxv1.UpdateDestinationResponse](
+		updateDestination: connect.NewClient[v1.UpdateDestinationRequest, v1.UpdateDestinationResponse](
 			httpClient,
 			baseURL+DestinationServiceUpdateDestinationProcedure,
 			connect.WithSchema(destinationServiceMethods.ByName("UpdateDestination")),
 			connect.WithClientOptions(opts...),
 		),
-		deleteDestination: connect.NewClient[outboxv1.DeleteDestinationRequest, outboxv1.DeleteDestinationResponse](
+		deleteDestination: connect.NewClient[v1.DeleteDestinationRequest, v1.DeleteDestinationResponse](
 			httpClient,
 			baseURL+DestinationServiceDeleteDestinationProcedure,
 			connect.WithSchema(destinationServiceMethods.ByName("DeleteDestination")),
 			connect.WithClientOptions(opts...),
 		),
-		testDestination: connect.NewClient[outboxv1.TestDestinationRequest, outboxv1.TestDestinationResponse](
+		testDestination: connect.NewClient[v1.TestDestinationRequest, v1.TestDestinationResponse](
 			httpClient,
 			baseURL+DestinationServiceTestDestinationProcedure,
 			connect.WithSchema(destinationServiceMethods.ByName("TestDestination")),
 			connect.WithClientOptions(opts...),
 		),
-		listDestinationTestResults: connect.NewClient[outboxv1.ListDestinationTestResultsRequest, outboxv1.ListDestinationTestResultsResponse](
+		listDestinationTestResults: connect.NewClient[v1.ListDestinationTestResultsRequest, v1.ListDestinationTestResultsResponse](
 			httpClient,
 			baseURL+DestinationServiceListDestinationTestResultsProcedure,
 			connect.WithSchema(destinationServiceMethods.ByName("ListDestinationTestResults")),
 			connect.WithClientOptions(opts...),
 		),
-		validateDestinationFilter: connect.NewClient[outboxv1.ValidateDestinationFilterRequest, outboxv1.ValidateDestinationFilterResponse](
+		validateDestinationFilter: connect.NewClient[v1.ValidateDestinationFilterRequest, v1.ValidateDestinationFilterResponse](
 			httpClient,
 			baseURL+DestinationServiceValidateDestinationFilterProcedure,
 			connect.WithSchema(destinationServiceMethods.ByName("ValidateDestinationFilter")),
 			connect.WithClientOptions(opts...),
 		),
-		pollEvents: connect.NewClient[outboxv1.PollEventsRequest, outboxv1.PollEventsResponse](
+		pollEvents: connect.NewClient[v1.PollEventsRequest, v1.PollEventsResponse](
 			httpClient,
 			baseURL+DestinationServicePollEventsProcedure,
 			connect.WithSchema(destinationServiceMethods.ByName("PollEvents")),
@@ -145,73 +145,73 @@ func NewDestinationServiceClient(httpClient connect.HTTPClient, baseURL string, 
 
 // destinationServiceClient implements DestinationServiceClient.
 type destinationServiceClient struct {
-	createDestination          *connect.Client[outboxv1.CreateDestinationRequest, outboxv1.CreateDestinationResponse]
-	getDestination             *connect.Client[outboxv1.GetDestinationRequest, outboxv1.GetDestinationResponse]
-	listDestinations           *connect.Client[outboxv1.ListDestinationsRequest, outboxv1.ListDestinationsResponse]
-	updateDestination          *connect.Client[outboxv1.UpdateDestinationRequest, outboxv1.UpdateDestinationResponse]
-	deleteDestination          *connect.Client[outboxv1.DeleteDestinationRequest, outboxv1.DeleteDestinationResponse]
-	testDestination            *connect.Client[outboxv1.TestDestinationRequest, outboxv1.TestDestinationResponse]
-	listDestinationTestResults *connect.Client[outboxv1.ListDestinationTestResultsRequest, outboxv1.ListDestinationTestResultsResponse]
-	validateDestinationFilter  *connect.Client[outboxv1.ValidateDestinationFilterRequest, outboxv1.ValidateDestinationFilterResponse]
-	pollEvents                 *connect.Client[outboxv1.PollEventsRequest, outboxv1.PollEventsResponse]
+	createDestination          *connect.Client[v1.CreateDestinationRequest, v1.CreateDestinationResponse]
+	getDestination             *connect.Client[v1.GetDestinationRequest, v1.GetDestinationResponse]
+	listDestinations           *connect.Client[v1.ListDestinationsRequest, v1.ListDestinationsResponse]
+	updateDestination          *connect.Client[v1.UpdateDestinationRequest, v1.UpdateDestinationResponse]
+	deleteDestination          *connect.Client[v1.DeleteDestinationRequest, v1.DeleteDestinationResponse]
+	testDestination            *connect.Client[v1.TestDestinationRequest, v1.TestDestinationResponse]
+	listDestinationTestResults *connect.Client[v1.ListDestinationTestResultsRequest, v1.ListDestinationTestResultsResponse]
+	validateDestinationFilter  *connect.Client[v1.ValidateDestinationFilterRequest, v1.ValidateDestinationFilterResponse]
+	pollEvents                 *connect.Client[v1.PollEventsRequest, v1.PollEventsResponse]
 }
 
 // CreateDestination calls outbox.v1.DestinationService.CreateDestination.
-func (c *destinationServiceClient) CreateDestination(ctx context.Context, req *connect.Request[outboxv1.CreateDestinationRequest]) (*connect.Response[outboxv1.CreateDestinationResponse], error) {
+func (c *destinationServiceClient) CreateDestination(ctx context.Context, req *connect.Request[v1.CreateDestinationRequest]) (*connect.Response[v1.CreateDestinationResponse], error) {
 	return c.createDestination.CallUnary(ctx, req)
 }
 
 // GetDestination calls outbox.v1.DestinationService.GetDestination.
-func (c *destinationServiceClient) GetDestination(ctx context.Context, req *connect.Request[outboxv1.GetDestinationRequest]) (*connect.Response[outboxv1.GetDestinationResponse], error) {
+func (c *destinationServiceClient) GetDestination(ctx context.Context, req *connect.Request[v1.GetDestinationRequest]) (*connect.Response[v1.GetDestinationResponse], error) {
 	return c.getDestination.CallUnary(ctx, req)
 }
 
 // ListDestinations calls outbox.v1.DestinationService.ListDestinations.
-func (c *destinationServiceClient) ListDestinations(ctx context.Context, req *connect.Request[outboxv1.ListDestinationsRequest]) (*connect.Response[outboxv1.ListDestinationsResponse], error) {
+func (c *destinationServiceClient) ListDestinations(ctx context.Context, req *connect.Request[v1.ListDestinationsRequest]) (*connect.Response[v1.ListDestinationsResponse], error) {
 	return c.listDestinations.CallUnary(ctx, req)
 }
 
 // UpdateDestination calls outbox.v1.DestinationService.UpdateDestination.
-func (c *destinationServiceClient) UpdateDestination(ctx context.Context, req *connect.Request[outboxv1.UpdateDestinationRequest]) (*connect.Response[outboxv1.UpdateDestinationResponse], error) {
+func (c *destinationServiceClient) UpdateDestination(ctx context.Context, req *connect.Request[v1.UpdateDestinationRequest]) (*connect.Response[v1.UpdateDestinationResponse], error) {
 	return c.updateDestination.CallUnary(ctx, req)
 }
 
 // DeleteDestination calls outbox.v1.DestinationService.DeleteDestination.
-func (c *destinationServiceClient) DeleteDestination(ctx context.Context, req *connect.Request[outboxv1.DeleteDestinationRequest]) (*connect.Response[outboxv1.DeleteDestinationResponse], error) {
+func (c *destinationServiceClient) DeleteDestination(ctx context.Context, req *connect.Request[v1.DeleteDestinationRequest]) (*connect.Response[v1.DeleteDestinationResponse], error) {
 	return c.deleteDestination.CallUnary(ctx, req)
 }
 
 // TestDestination calls outbox.v1.DestinationService.TestDestination.
-func (c *destinationServiceClient) TestDestination(ctx context.Context, req *connect.Request[outboxv1.TestDestinationRequest]) (*connect.Response[outboxv1.TestDestinationResponse], error) {
+func (c *destinationServiceClient) TestDestination(ctx context.Context, req *connect.Request[v1.TestDestinationRequest]) (*connect.Response[v1.TestDestinationResponse], error) {
 	return c.testDestination.CallUnary(ctx, req)
 }
 
 // ListDestinationTestResults calls outbox.v1.DestinationService.ListDestinationTestResults.
-func (c *destinationServiceClient) ListDestinationTestResults(ctx context.Context, req *connect.Request[outboxv1.ListDestinationTestResultsRequest]) (*connect.Response[outboxv1.ListDestinationTestResultsResponse], error) {
+func (c *destinationServiceClient) ListDestinationTestResults(ctx context.Context, req *connect.Request[v1.ListDestinationTestResultsRequest]) (*connect.Response[v1.ListDestinationTestResultsResponse], error) {
 	return c.listDestinationTestResults.CallUnary(ctx, req)
 }
 
 // ValidateDestinationFilter calls outbox.v1.DestinationService.ValidateDestinationFilter.
-func (c *destinationServiceClient) ValidateDestinationFilter(ctx context.Context, req *connect.Request[outboxv1.ValidateDestinationFilterRequest]) (*connect.Response[outboxv1.ValidateDestinationFilterResponse], error) {
+func (c *destinationServiceClient) ValidateDestinationFilter(ctx context.Context, req *connect.Request[v1.ValidateDestinationFilterRequest]) (*connect.Response[v1.ValidateDestinationFilterResponse], error) {
 	return c.validateDestinationFilter.CallUnary(ctx, req)
 }
 
 // PollEvents calls outbox.v1.DestinationService.PollEvents.
-func (c *destinationServiceClient) PollEvents(ctx context.Context, req *connect.Request[outboxv1.PollEventsRequest]) (*connect.Response[outboxv1.PollEventsResponse], error) {
+func (c *destinationServiceClient) PollEvents(ctx context.Context, req *connect.Request[v1.PollEventsRequest]) (*connect.Response[v1.PollEventsResponse], error) {
 	return c.pollEvents.CallUnary(ctx, req)
 }
 
 // DestinationServiceHandler is an implementation of the outbox.v1.DestinationService service.
 type DestinationServiceHandler interface {
-	CreateDestination(context.Context, *connect.Request[outboxv1.CreateDestinationRequest]) (*connect.Response[outboxv1.CreateDestinationResponse], error)
-	GetDestination(context.Context, *connect.Request[outboxv1.GetDestinationRequest]) (*connect.Response[outboxv1.GetDestinationResponse], error)
-	ListDestinations(context.Context, *connect.Request[outboxv1.ListDestinationsRequest]) (*connect.Response[outboxv1.ListDestinationsResponse], error)
-	UpdateDestination(context.Context, *connect.Request[outboxv1.UpdateDestinationRequest]) (*connect.Response[outboxv1.UpdateDestinationResponse], error)
-	DeleteDestination(context.Context, *connect.Request[outboxv1.DeleteDestinationRequest]) (*connect.Response[outboxv1.DeleteDestinationResponse], error)
-	TestDestination(context.Context, *connect.Request[outboxv1.TestDestinationRequest]) (*connect.Response[outboxv1.TestDestinationResponse], error)
-	ListDestinationTestResults(context.Context, *connect.Request[outboxv1.ListDestinationTestResultsRequest]) (*connect.Response[outboxv1.ListDestinationTestResultsResponse], error)
-	ValidateDestinationFilter(context.Context, *connect.Request[outboxv1.ValidateDestinationFilterRequest]) (*connect.Response[outboxv1.ValidateDestinationFilterResponse], error)
-	PollEvents(context.Context, *connect.Request[outboxv1.PollEventsRequest]) (*connect.Response[outboxv1.PollEventsResponse], error)
+	CreateDestination(context.Context, *connect.Request[v1.CreateDestinationRequest]) (*connect.Response[v1.CreateDestinationResponse], error)
+	GetDestination(context.Context, *connect.Request[v1.GetDestinationRequest]) (*connect.Response[v1.GetDestinationResponse], error)
+	ListDestinations(context.Context, *connect.Request[v1.ListDestinationsRequest]) (*connect.Response[v1.ListDestinationsResponse], error)
+	UpdateDestination(context.Context, *connect.Request[v1.UpdateDestinationRequest]) (*connect.Response[v1.UpdateDestinationResponse], error)
+	DeleteDestination(context.Context, *connect.Request[v1.DeleteDestinationRequest]) (*connect.Response[v1.DeleteDestinationResponse], error)
+	TestDestination(context.Context, *connect.Request[v1.TestDestinationRequest]) (*connect.Response[v1.TestDestinationResponse], error)
+	ListDestinationTestResults(context.Context, *connect.Request[v1.ListDestinationTestResultsRequest]) (*connect.Response[v1.ListDestinationTestResultsResponse], error)
+	ValidateDestinationFilter(context.Context, *connect.Request[v1.ValidateDestinationFilterRequest]) (*connect.Response[v1.ValidateDestinationFilterResponse], error)
+	PollEvents(context.Context, *connect.Request[v1.PollEventsRequest]) (*connect.Response[v1.PollEventsResponse], error)
 }
 
 // NewDestinationServiceHandler builds an HTTP handler from the service implementation. It returns
@@ -220,7 +220,7 @@ type DestinationServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewDestinationServiceHandler(svc DestinationServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	destinationServiceMethods := outboxv1.File_outbox_v1_destination_proto.Services().ByName("DestinationService").Methods()
+	destinationServiceMethods := v1.File_outbox_v1_destination_proto.Services().ByName("DestinationService").Methods()
 	destinationServiceCreateDestinationHandler := connect.NewUnaryHandler(
 		DestinationServiceCreateDestinationProcedure,
 		svc.CreateDestination,
@@ -304,38 +304,38 @@ func NewDestinationServiceHandler(svc DestinationServiceHandler, opts ...connect
 // UnimplementedDestinationServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedDestinationServiceHandler struct{}
 
-func (UnimplementedDestinationServiceHandler) CreateDestination(context.Context, *connect.Request[outboxv1.CreateDestinationRequest]) (*connect.Response[outboxv1.CreateDestinationResponse], error) {
+func (UnimplementedDestinationServiceHandler) CreateDestination(context.Context, *connect.Request[v1.CreateDestinationRequest]) (*connect.Response[v1.CreateDestinationResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.DestinationService.CreateDestination is not implemented"))
 }
 
-func (UnimplementedDestinationServiceHandler) GetDestination(context.Context, *connect.Request[outboxv1.GetDestinationRequest]) (*connect.Response[outboxv1.GetDestinationResponse], error) {
+func (UnimplementedDestinationServiceHandler) GetDestination(context.Context, *connect.Request[v1.GetDestinationRequest]) (*connect.Response[v1.GetDestinationResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.DestinationService.GetDestination is not implemented"))
 }
 
-func (UnimplementedDestinationServiceHandler) ListDestinations(context.Context, *connect.Request[outboxv1.ListDestinationsRequest]) (*connect.Response[outboxv1.ListDestinationsResponse], error) {
+func (UnimplementedDestinationServiceHandler) ListDestinations(context.Context, *connect.Request[v1.ListDestinationsRequest]) (*connect.Response[v1.ListDestinationsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.DestinationService.ListDestinations is not implemented"))
 }
 
-func (UnimplementedDestinationServiceHandler) UpdateDestination(context.Context, *connect.Request[outboxv1.UpdateDestinationRequest]) (*connect.Response[outboxv1.UpdateDestinationResponse], error) {
+func (UnimplementedDestinationServiceHandler) UpdateDestination(context.Context, *connect.Request[v1.UpdateDestinationRequest]) (*connect.Response[v1.UpdateDestinationResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.DestinationService.UpdateDestination is not implemented"))
 }
 
-func (UnimplementedDestinationServiceHandler) DeleteDestination(context.Context, *connect.Request[outboxv1.DeleteDestinationRequest]) (*connect.Response[outboxv1.DeleteDestinationResponse], error) {
+func (UnimplementedDestinationServiceHandler) DeleteDestination(context.Context, *connect.Request[v1.DeleteDestinationRequest]) (*connect.Response[v1.DeleteDestinationResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.DestinationService.DeleteDestination is not implemented"))
 }
 
-func (UnimplementedDestinationServiceHandler) TestDestination(context.Context, *connect.Request[outboxv1.TestDestinationRequest]) (*connect.Response[outboxv1.TestDestinationResponse], error) {
+func (UnimplementedDestinationServiceHandler) TestDestination(context.Context, *connect.Request[v1.TestDestinationRequest]) (*connect.Response[v1.TestDestinationResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.DestinationService.TestDestination is not implemented"))
 }
 
-func (UnimplementedDestinationServiceHandler) ListDestinationTestResults(context.Context, *connect.Request[outboxv1.ListDestinationTestResultsRequest]) (*connect.Response[outboxv1.ListDestinationTestResultsResponse], error) {
+func (UnimplementedDestinationServiceHandler) ListDestinationTestResults(context.Context, *connect.Request[v1.ListDestinationTestResultsRequest]) (*connect.Response[v1.ListDestinationTestResultsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.DestinationService.ListDestinationTestResults is not implemented"))
 }
 
-func (UnimplementedDestinationServiceHandler) ValidateDestinationFilter(context.Context, *connect.Request[outboxv1.ValidateDestinationFilterRequest]) (*connect.Response[outboxv1.ValidateDestinationFilterResponse], error) {
+func (UnimplementedDestinationServiceHandler) ValidateDestinationFilter(context.Context, *connect.Request[v1.ValidateDestinationFilterRequest]) (*connect.Response[v1.ValidateDestinationFilterResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.DestinationService.ValidateDestinationFilter is not implemented"))
 }
 
-func (UnimplementedDestinationServiceHandler) PollEvents(context.Context, *connect.Request[outboxv1.PollEventsRequest]) (*connect.Response[outboxv1.PollEventsResponse], error) {
+func (UnimplementedDestinationServiceHandler) PollEvents(context.Context, *connect.Request[v1.PollEventsRequest]) (*connect.Response[v1.PollEventsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.DestinationService.PollEvents is not implemented"))
 }

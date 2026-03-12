@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"connectrpc.com/connect"
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 )
 
 // TestListen_YieldsBufferedEvent verifies that Next() drains the pre-populated

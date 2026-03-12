@@ -4,20 +4,24 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	longrunningpb "cloud.google.com/go/longrunning/autogen/longrunningpb"
+	outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 )
 
 // ---- mockConnectorClient ----
 
 type mockConnectorClient struct {
-	createConnector      func(context.Context, *connect.Request[outboxv1.CreateConnectorRequest]) (*connect.Response[outboxv1.CreateConnectorResponse], error)
-	getConnector         func(context.Context, *connect.Request[outboxv1.GetConnectorRequest]) (*connect.Response[outboxv1.GetConnectorResponse], error)
-	listConnectors       func(context.Context, *connect.Request[outboxv1.ListConnectorsRequest]) (*connect.Response[outboxv1.ListConnectorsResponse], error)
-	updateConnector      func(context.Context, *connect.Request[outboxv1.UpdateConnectorRequest]) (*connect.Response[outboxv1.UpdateConnectorResponse], error)
-	deleteConnector      func(context.Context, *connect.Request[outboxv1.DeleteConnectorRequest]) (*connect.Response[outboxv1.DeleteConnectorResponse], error)
-	reauthorizeConnector func(context.Context, *connect.Request[outboxv1.ReauthorizeConnectorRequest]) (*connect.Response[outboxv1.ReauthorizeConnectorResponse], error)
-	activateConnector    func(context.Context, *connect.Request[outboxv1.ActivateConnectorRequest]) (*connect.Response[outboxv1.ActivateConnectorResponse], error)
-	deactivateConnector  func(context.Context, *connect.Request[outboxv1.DeactivateConnectorRequest]) (*connect.Response[outboxv1.DeactivateConnectorResponse], error)
+	createConnector           func(context.Context, *connect.Request[outboxv1.CreateConnectorRequest]) (*connect.Response[outboxv1.CreateConnectorResponse], error)
+	createManagedConnector    func(context.Context, *connect.Request[outboxv1.CreateManagedConnectorRequest]) (*connect.Response[longrunningpb.Operation], error)
+	getConnector              func(context.Context, *connect.Request[outboxv1.GetConnectorRequest]) (*connect.Response[outboxv1.GetConnectorResponse], error)
+	listConnectors            func(context.Context, *connect.Request[outboxv1.ListConnectorsRequest]) (*connect.Response[outboxv1.ListConnectorsResponse], error)
+	updateConnector           func(context.Context, *connect.Request[outboxv1.UpdateConnectorRequest]) (*connect.Response[outboxv1.UpdateConnectorResponse], error)
+	deleteConnector           func(context.Context, *connect.Request[outboxv1.DeleteConnectorRequest]) (*connect.Response[outboxv1.DeleteConnectorResponse], error)
+	detachProvisionedResource func(context.Context, *connect.Request[outboxv1.DetachProvisionedResourceRequest]) (*connect.Response[outboxv1.DetachProvisionedResourceResponse], error)
+	reauthorizeConnector      func(context.Context, *connect.Request[outboxv1.ReauthorizeConnectorRequest]) (*connect.Response[outboxv1.ReauthorizeConnectorResponse], error)
+	activateConnector         func(context.Context, *connect.Request[outboxv1.ActivateConnectorRequest]) (*connect.Response[outboxv1.ActivateConnectorResponse], error)
+	deactivateConnector       func(context.Context, *connect.Request[outboxv1.DeactivateConnectorRequest]) (*connect.Response[outboxv1.DeactivateConnectorResponse], error)
+	verifyConnector           func(context.Context, *connect.Request[outboxv1.VerifyConnectorRequest]) (*connect.Response[outboxv1.VerifyConnectorResponse], error)
 }
 
 func (m *mockConnectorClient) CreateConnector(ctx context.Context, req *connect.Request[outboxv1.CreateConnectorRequest]) (*connect.Response[outboxv1.CreateConnectorResponse], error) {
@@ -25,6 +29,13 @@ func (m *mockConnectorClient) CreateConnector(ctx context.Context, req *connect.
 		return m.createConnector(ctx, req)
 	}
 	panic("mockConnectorClient.CreateConnector not set")
+}
+
+func (m *mockConnectorClient) CreateManagedConnector(ctx context.Context, req *connect.Request[outboxv1.CreateManagedConnectorRequest]) (*connect.Response[longrunningpb.Operation], error) {
+	if m.createManagedConnector != nil {
+		return m.createManagedConnector(ctx, req)
+	}
+	panic("mockConnectorClient.CreateManagedConnector not set")
 }
 
 func (m *mockConnectorClient) GetConnector(ctx context.Context, req *connect.Request[outboxv1.GetConnectorRequest]) (*connect.Response[outboxv1.GetConnectorResponse], error) {
@@ -55,6 +66,13 @@ func (m *mockConnectorClient) DeleteConnector(ctx context.Context, req *connect.
 	panic("mockConnectorClient.DeleteConnector not set")
 }
 
+func (m *mockConnectorClient) DetachProvisionedResource(ctx context.Context, req *connect.Request[outboxv1.DetachProvisionedResourceRequest]) (*connect.Response[outboxv1.DetachProvisionedResourceResponse], error) {
+	if m.detachProvisionedResource != nil {
+		return m.detachProvisionedResource(ctx, req)
+	}
+	panic("mockConnectorClient.DetachProvisionedResource not set")
+}
+
 func (m *mockConnectorClient) ReauthorizeConnector(ctx context.Context, req *connect.Request[outboxv1.ReauthorizeConnectorRequest]) (*connect.Response[outboxv1.ReauthorizeConnectorResponse], error) {
 	if m.reauthorizeConnector != nil {
 		return m.reauthorizeConnector(ctx, req)
@@ -74,6 +92,50 @@ func (m *mockConnectorClient) DeactivateConnector(ctx context.Context, req *conn
 		return m.deactivateConnector(ctx, req)
 	}
 	panic("mockConnectorClient.DeactivateConnector not set")
+}
+
+func (m *mockConnectorClient) VerifyConnector(ctx context.Context, req *connect.Request[outboxv1.VerifyConnectorRequest]) (*connect.Response[outboxv1.VerifyConnectorResponse], error) {
+	if m.verifyConnector != nil {
+		return m.verifyConnector(ctx, req)
+	}
+	panic("mockConnectorClient.VerifyConnector not set")
+}
+
+// ---- mockTemplateClient ----
+
+type mockTemplateClient struct {
+	createTemplate func(context.Context, *connect.Request[outboxv1.CreateTemplateRequest]) (*connect.Response[outboxv1.CreateTemplateResponse], error)
+	getTemplate    func(context.Context, *connect.Request[outboxv1.GetTemplateRequest]) (*connect.Response[outboxv1.GetTemplateResponse], error)
+	listTemplates  func(context.Context, *connect.Request[outboxv1.ListTemplatesRequest]) (*connect.Response[outboxv1.ListTemplatesResponse], error)
+	deleteTemplate func(context.Context, *connect.Request[outboxv1.DeleteTemplateRequest]) (*connect.Response[outboxv1.DeleteTemplateResponse], error)
+}
+
+func (m *mockTemplateClient) CreateTemplate(ctx context.Context, req *connect.Request[outboxv1.CreateTemplateRequest]) (*connect.Response[outboxv1.CreateTemplateResponse], error) {
+	if m.createTemplate != nil {
+		return m.createTemplate(ctx, req)
+	}
+	panic("mockTemplateClient.CreateTemplate not set")
+}
+
+func (m *mockTemplateClient) GetTemplate(ctx context.Context, req *connect.Request[outboxv1.GetTemplateRequest]) (*connect.Response[outboxv1.GetTemplateResponse], error) {
+	if m.getTemplate != nil {
+		return m.getTemplate(ctx, req)
+	}
+	panic("mockTemplateClient.GetTemplate not set")
+}
+
+func (m *mockTemplateClient) ListTemplates(ctx context.Context, req *connect.Request[outboxv1.ListTemplatesRequest]) (*connect.Response[outboxv1.ListTemplatesResponse], error) {
+	if m.listTemplates != nil {
+		return m.listTemplates(ctx, req)
+	}
+	panic("mockTemplateClient.ListTemplates not set")
+}
+
+func (m *mockTemplateClient) DeleteTemplate(ctx context.Context, req *connect.Request[outboxv1.DeleteTemplateRequest]) (*connect.Response[outboxv1.DeleteTemplateResponse], error) {
+	if m.deleteTemplate != nil {
+		return m.deleteTemplate(ctx, req)
+	}
+	panic("mockTemplateClient.DeleteTemplate not set")
 }
 
 // ---- mockAccountClient ----
@@ -188,27 +250,6 @@ func (m *mockMessageClient) SendTypingIndicator(ctx context.Context, req *connec
 		return m.sendTypingIndicator(ctx, req)
 	}
 	panic("mockMessageClient.SendTypingIndicator not set")
-}
-
-// ---- mockChannelClient ----
-
-type mockChannelClient struct {
-	getChannel   func(context.Context, *connect.Request[outboxv1.GetChannelRequest]) (*connect.Response[outboxv1.GetChannelResponse], error)
-	listChannels func(context.Context, *connect.Request[outboxv1.ListChannelsRequest]) (*connect.Response[outboxv1.ListChannelsResponse], error)
-}
-
-func (m *mockChannelClient) GetChannel(ctx context.Context, req *connect.Request[outboxv1.GetChannelRequest]) (*connect.Response[outboxv1.GetChannelResponse], error) {
-	if m.getChannel != nil {
-		return m.getChannel(ctx, req)
-	}
-	panic("mockChannelClient.GetChannel not set")
-}
-
-func (m *mockChannelClient) ListChannels(ctx context.Context, req *connect.Request[outboxv1.ListChannelsRequest]) (*connect.Response[outboxv1.ListChannelsResponse], error) {
-	if m.listChannels != nil {
-		return m.listChannels(ctx, req)
-	}
-	panic("mockChannelClient.ListChannels not set")
 }
 
 // ---- mockDestinationClient ----

@@ -86,7 +86,7 @@ type Account struct {
 	// Once set (via CreateAccount or ClaimAccount), this field is immutable.
 	ContactId string `protobuf:"bytes,2,opt,name=contact_id,json=contactId" json:"contact_id,omitempty"`
 	// Platform-specific identifier for the external account.
-	// Format: "{channel}:{id}" — e.g., "whatsapp:+15551234567", "apns:device-token".
+	// Format: "{channel}:{id}" — e.g., "whatsapp:+15551234567", "telegram:123456789".
 	// Cannot be changed after creation.
 	ExternalId    string                 `protobuf:"bytes,3,opt,name=external_id,json=externalId" json:"external_id,omitempty"`
 	Source        Account_Source         `protobuf:"varint,4,opt,name=source,enum=outbox.v1.Account_Source" json:"source,omitempty"`
@@ -791,7 +791,7 @@ func (*DeleteAccountResponse) Descriptor() ([]byte, []int) {
 type ResolveAccountRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Platform-specific external identifier to resolve.
-	// Format: "{channel}:{id}" — e.g., "whatsapp:+15551234567", "apns:device-token".
+	// Format: "{channel}:{id}" — e.g., "whatsapp:+15551234567", "telegram:123456789".
 	ExternalId    string `protobuf:"bytes,1,opt,name=external_id,json=externalId" json:"external_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -961,7 +961,9 @@ const file_outbox_v1_account_proto_rawDesc = "" +
 	"\rUpdateAccount\x12\x1f.outbox.v1.UpdateAccountRequest\x1a .outbox.v1.UpdateAccountResponse\"\x16\xdaA\x13account,update_mask\x12c\n" +
 	"\fClaimAccount\x12\x1e.outbox.v1.ClaimAccountRequest\x1a\x1f.outbox.v1.ClaimAccountResponse\"\x12\xdaA\x0fname,contact_id\x12[\n" +
 	"\rDeleteAccount\x12\x1f.outbox.v1.DeleteAccountRequest\x1a .outbox.v1.DeleteAccountResponse\"\a\xdaA\x04name\x12e\n" +
-	"\x0eResolveAccount\x12 .outbox.v1.ResolveAccountRequest\x1a!.outbox.v1.ResolveAccountResponse\"\x0e\xdaA\vexternal_idBPZIgithub.com/getoutbox/outbox-internal/go/outbox-api/gen/outbox/v1;outboxv1\x92\x03\x02\b\x02b\beditionsp\xe8\a"
+	"\x0eResolveAccount\x12 .outbox.v1.ResolveAccountRequest\x1a!.outbox.v1.ResolveAccountResponse\"\x0e\xdaA\vexternal_idB\x9e\x01\n" +
+	"\rcom.outbox.v1B\fAccountProtoP\x01Z5github.com/getoutbox/outbox-go/gen/outbox/v1;outboxv1\xa2\x02\x03OXX\xaa\x02\tOutbox.V1\xca\x02\tOutbox\\V1\xe2\x02\x15Outbox\\V1\\GPBMetadata\xea\x02\n" +
+	"Outbox::V1\x92\x03\x02\b\x02b\beditionsp\xe8\a"
 
 var (
 	file_outbox_v1_account_proto_rawDescOnce sync.Once

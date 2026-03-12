@@ -3,9 +3,11 @@ package outbox
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"connectrpc.com/connect"
-	outboxv1connect "github.com/getoutbox/outbox-go/outboxv1/outboxv1connect"
+	longrunningpb "cloud.google.com/go/longrunning/autogen/longrunningpb"
+	outboxv1connect "github.com/getoutbox/outbox-go/gen/outbox/v1/outboxv1connect"
 )
 
 const defaultBaseURL = "https://api.outbox.chat"
@@ -32,14 +34,14 @@ func WithHTTPClient(hc *http.Client) Option {
 type Client struct {
 	// Accounts provides operations on Accounts (end-user identities on a Channel).
 	Accounts *AccountsService
-	// Channels provides access to the available messaging Channels (e.g. WhatsApp, Slack).
-	Channels *ChannelsService
 	// Connectors provides operations on Connectors, which bridge an Account to a Channel.
 	Connectors *ConnectorsService
 	// Destinations provides operations on Destinations, which receive webhook delivery events.
 	Destinations *DestinationsService
 	// Messages provides operations for sending, updating, and receiving Messages.
 	Messages *MessagesService
+	// Templates provides operations on message Templates (e.g. WhatsApp templates).
+	Templates *TemplatesService
 }
 
 // New creates a new Outbox client authenticated with the given API key.
@@ -53,12 +55,23 @@ func New(apiKey string, opts ...Option) *Client {
 		o(cfg)
 	}
 	interceptor := connect.WithInterceptors(newBearerAuthInterceptor(apiKey))
+	opsClient := connect.NewClient[longrunningpb.GetOperationRequest, longrunningpb.Operation](
+		cfg.httpClient,
+		cfg.baseURL+"/google.longrunning.Operations/GetOperation",
+		interceptor,
+	)
 	return &Client{
-		Accounts:     &AccountsService{client: outboxv1connect.NewAccountServiceClient(cfg.httpClient, cfg.baseURL, interceptor)},
-		Channels:     &ChannelsService{client: outboxv1connect.NewChannelServiceClient(cfg.httpClient, cfg.baseURL, interceptor)},
-		Connectors:   &ConnectorsService{client: outboxv1connect.NewConnectorServiceClient(cfg.httpClient, cfg.baseURL, interceptor)},
+		Accounts: &AccountsService{client: outboxv1connect.NewAccountServiceClient(cfg.httpClient, cfg.baseURL, interceptor)},
+		Connectors: &ConnectorsService{
+			client: outboxv1connect.NewConnectorServiceClient(cfg.httpClient, cfg.baseURL, interceptor),
+			getOperation: func(ctx context.Context, req *connect.Request[longrunningpb.GetOperationRequest]) (*connect.Response[longrunningpb.Operation], error) {
+				return opsClient.CallUnary(ctx, req)
+			},
+			pollInterval: 2 * time.Second,
+		},
 		Destinations: &DestinationsService{client: outboxv1connect.NewDestinationServiceClient(cfg.httpClient, cfg.baseURL, interceptor)},
 		Messages:     &MessagesService{client: outboxv1connect.NewMessageServiceClient(cfg.httpClient, cfg.baseURL, interceptor)},
+		Templates:    &TemplatesService{client: outboxv1connect.NewTemplateServiceClient(cfg.httpClient, cfg.baseURL, interceptor)},
 	}
 }
 

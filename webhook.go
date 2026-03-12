@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"

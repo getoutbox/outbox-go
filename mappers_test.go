@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -51,70 +51,15 @@ func TestMapAccount_NilMetadata(t *testing.T) {
 	}
 }
 
-func TestMapChannel_WithCapabilities(t *testing.T) {
-	p := &outboxv1.Channel{
-		Name: "channels/ch1",
-		Capabilities: &outboxv1.Channel_Capabilities{
-			Groups:                true,
-			Reactions:             true,
-			Edits:                 false,
-			Deletions:             true,
-			ReadReceipts:          false,
-			TypingIndicators:      true,
-			SupportedContentTypes: []string{"text/plain", "image/jpeg"},
-		},
-	}
-	got := mapChannel(p)
-	if got.ID != "ch1" {
-		t.Errorf("ID = %q, want ch1", got.ID)
-	}
-	if got.Capabilities == nil {
-		t.Fatal("Capabilities is nil")
-	}
-	if !got.Capabilities.Groups {
-		t.Error("Groups should be true")
-	}
-	if !got.Capabilities.Reactions {
-		t.Error("Reactions should be true")
-	}
-	if got.Capabilities.Edits {
-		t.Error("Edits should be false")
-	}
-	if !got.Capabilities.Deletions {
-		t.Error("Deletions should be true")
-	}
-	if got.Capabilities.ReadReceipts {
-		t.Error("ReadReceipts should be false")
-	}
-	if !got.Capabilities.TypingIndicators {
-		t.Error("TypingIndicators should be true")
-	}
-	if len(got.Capabilities.SupportedContentTypes) != 2 {
-		t.Errorf("SupportedContentTypes len = %d, want 2", len(got.Capabilities.SupportedContentTypes))
-	}
-}
-
-func TestMapChannel_NilCapabilities(t *testing.T) {
-	p := &outboxv1.Channel{Name: "channels/ch1"}
-	got := mapChannel(p)
-	if got.Capabilities != nil {
-		t.Errorf("Capabilities = %v, want nil", got.Capabilities)
-	}
-}
-
 func TestMapConnector_AllFields(t *testing.T) {
 	ts := time.Unix(1700000000, 0).UTC()
 	p := &outboxv1.Connector{
 		Name:         "connectors/conn1",
-		State:        outboxv1.Connector_STATE_ACTIVE,
+		State:        outboxv1.ConnectorState_CONNECTOR_STATE_ACTIVE,
 		Tags:         []string{"prod", "slack"},
 		ErrorMessage: "something went wrong",
-		Account: &outboxv1.Account{
-			Name:      "accounts/acc1",
-			ContactId: "contact1",
-		},
-		CreateTime: timestamppb.New(ts),
-		UpdateTime: timestamppb.New(ts.Add(time.Hour)),
+		CreateTime:   timestamppb.New(ts),
+		UpdateTime:   timestamppb.New(ts.Add(time.Hour)),
 	}
 	got := mapConnector(p)
 	if got.ID != "conn1" {
@@ -129,28 +74,8 @@ func TestMapConnector_AllFields(t *testing.T) {
 	if got.ErrorMessage != "something went wrong" {
 		t.Errorf("ErrorMessage = %q, want 'something went wrong'", got.ErrorMessage)
 	}
-	if got.Account == nil {
-		t.Fatal("Account is nil")
-	}
-	if got.Account.ID != "acc1" {
-		t.Errorf("Account.ID = %q, want acc1", got.Account.ID)
-	}
 	if !got.CreateTime.Equal(ts) {
 		t.Errorf("CreateTime = %v, want %v", got.CreateTime, ts)
-	}
-}
-
-func TestMapConnector_NilAccount(t *testing.T) {
-	p := &outboxv1.Connector{
-		Name:  "connectors/conn1",
-		State: outboxv1.Connector_STATE_AUTHORIZING,
-	}
-	got := mapConnector(p)
-	if got.Account != nil {
-		t.Errorf("Account = %v, want nil", got.Account)
-	}
-	if got.State != ConnectorStateAuthorizing {
-		t.Errorf("State = %v, want ConnectorStateAuthorizing", got.State)
 	}
 }
 
@@ -609,21 +534,21 @@ func TestApplyConnectorChannelConfig(t *testing.T) {
 			wantMut:   false,
 		},
 		{
-			name:      "Connector_Email returns email",
-			cfg:       &outboxv1.Connector_Email{Email: &outboxv1.EmailConfig{}},
-			wantField: "email",
+			name:      "Connector_OutboxEmail returns outbox_email",
+			cfg:       &outboxv1.Connector_OutboxEmail{OutboxEmail: &outboxv1.OutboxEmailConfig{}},
+			wantField: "outbox_email",
 			wantMut:   true,
 		},
 		{
-			name:      "Connector_Discord returns discord",
-			cfg:       &outboxv1.Connector_Discord{Discord: &outboxv1.DiscordConfig{}},
-			wantField: "discord",
+			name:      "Connector_DiscordBot returns discord_bot",
+			cfg:       &outboxv1.Connector_DiscordBot{DiscordBot: &outboxv1.DiscordBotConfig{}},
+			wantField: "discord_bot",
 			wantMut:   true,
 		},
 		{
-			name:      "Connector_Slack returns slack",
-			cfg:       &outboxv1.Connector_Slack{Slack: &outboxv1.SlackConfig{}},
-			wantField: "slack",
+			name:      "Connector_SlackBot returns slack_bot",
+			cfg:       &outboxv1.Connector_SlackBot{SlackBot: &outboxv1.SlackBotConfig{}},
+			wantField: "slack_bot",
 			wantMut:   true,
 		},
 	}
@@ -737,25 +662,6 @@ func TestMapTypingIndicator_NilAccount(t *testing.T) {
 	}
 	if !got.Typing {
 		t.Error("Typing = false, want true")
-	}
-}
-
-func TestMapChannel_EmptySupportedContentTypes(t *testing.T) {
-	p := &outboxv1.Channel{
-		Name: "channels/ch1",
-		Capabilities: &outboxv1.Channel_Capabilities{
-			SupportedContentTypes: []string{},
-		},
-	}
-	got := mapChannel(p)
-	if got.Capabilities == nil {
-		t.Fatal("Capabilities is nil")
-	}
-	if got.Capabilities.SupportedContentTypes == nil {
-		t.Error("SupportedContentTypes is nil, want empty slice")
-	}
-	if len(got.Capabilities.SupportedContentTypes) != 0 {
-		t.Errorf("SupportedContentTypes len = %d, want 0", len(got.Capabilities.SupportedContentTypes))
 	}
 }
 

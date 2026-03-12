@@ -20,7 +20,7 @@
 //   - [Client.Accounts] — look up or manage end-user accounts
 //   - [Client.Messages] — send, update, delete, and list messages
 //   - [Client.Destinations] — configure push targets for events
-//   - [Client.Channels] — list available messaging channels
+//   - [Client.Templates] — create and manage message templates (e.g. WhatsApp templates)
 //
 // # Oneof Fields
 //
@@ -29,17 +29,17 @@
 // channel-specific details:
 //
 //	switch cfg := connector.ChannelConfig.(type) {
-//	case *outboxv1.Connector_Slack:
-//	    fmt.Println(cfg.Slack.BotToken)
-//	case *outboxv1.Connector_Whatsapp:
-//	    fmt.Println(cfg.Whatsapp.PhoneNumber)
+//	case *outboxv1.Connector_SlackBot:
+//	    fmt.Println(cfg.SlackBot.BotToken)
+//	case *outboxv1.Connector_WhatsappBot:
+//	    fmt.Println(cfg.WhatsappBot.AppId)
 //	}
 //
 // Pass the same oneof wrapper types when creating or updating:
 //
 //	client.Connectors.Create(ctx, outbox.CreateConnectorInput{
-//	    ChannelConfig: &outboxv1.Connector_Slack{
-//	        Slack: &outboxv1.SlackConfig{BotToken: "xoxb-..."},
+//	    ChannelConfig: &outboxv1.Connector_SlackBot{
+//	        SlackBot: &outboxv1.SlackBotConfig{BotToken: "xoxb-..."},
 //	    },
 //	})
 //

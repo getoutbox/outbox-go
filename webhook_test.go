@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	outbox "github.com/getoutbox/outbox-go"
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 	"google.golang.org/protobuf/proto"
 )
 

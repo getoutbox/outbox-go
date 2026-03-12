@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"connectrpc.com/connect"
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 )
 
 func newMessageSvc(m *mockMessageClient) *MessagesService {

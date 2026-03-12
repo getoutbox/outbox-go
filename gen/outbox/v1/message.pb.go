@@ -1596,7 +1596,9 @@ const file_outbox_v1_message_proto_rawDesc = "" +
 	"\rDeleteMessage\x12\x1f.outbox.v1.DeleteMessageRequest\x1a .outbox.v1.DeleteMessageResponse\"\a\xdaA\x04name\x12T\n" +
 	"\fListMessages\x12\x1e.outbox.v1.ListMessagesRequest\x1a\x1f.outbox.v1.ListMessagesResponse\"\x03\xdaA\x00\x12w\n" +
 	"\x0fSendReadReceipt\x12!.outbox.v1.SendReadReceiptRequest\x1a\".outbox.v1.SendReadReceiptResponse\"\x1d\xdaA\x1aconnector,account,messages\x12\x81\x01\n" +
-	"\x13SendTypingIndicator\x12%.outbox.v1.SendTypingIndicatorRequest\x1a&.outbox.v1.SendTypingIndicatorResponse\"\x1b\xdaA\x18connector,account,typingBPZIgithub.com/getoutbox/outbox-internal/go/outbox-api/gen/outbox/v1;outboxv1\x92\x03\x02\b\x02b\beditionsp\xe8\a"
+	"\x13SendTypingIndicator\x12%.outbox.v1.SendTypingIndicatorRequest\x1a&.outbox.v1.SendTypingIndicatorResponse\"\x1b\xdaA\x18connector,account,typingB\x9e\x01\n" +
+	"\rcom.outbox.v1B\fMessageProtoP\x01Z5github.com/getoutbox/outbox-go/gen/outbox/v1;outboxv1\xa2\x02\x03OXX\xaa\x02\tOutbox.V1\xca\x02\tOutbox\\V1\xe2\x02\x15Outbox\\V1\\GPBMetadata\xea\x02\n" +
+	"Outbox::V1\x92\x03\x02\b\x02b\beditionsp\xe8\a"
 
 var (
 	file_outbox_v1_message_proto_rawDescOnce sync.Once

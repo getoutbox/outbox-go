@@ -1,6 +1,6 @@
 package outbox
 
-import outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+import outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 
 // AccountSource indicates how an Account was created.
 type AccountSource = outboxv1.Account_Source
@@ -12,14 +12,53 @@ const (
 )
 
 // ConnectorState represents the lifecycle state of a Connector.
-type ConnectorState = outboxv1.Connector_State
+type ConnectorState = outboxv1.ConnectorState
 
 const (
-	ConnectorStateUnspecified ConnectorState = outboxv1.Connector_STATE_UNSPECIFIED
-	ConnectorStateActive      ConnectorState = outboxv1.Connector_STATE_ACTIVE
-	ConnectorStateInactive    ConnectorState = outboxv1.Connector_STATE_INACTIVE
-	ConnectorStateAuthorizing ConnectorState = outboxv1.Connector_STATE_AUTHORIZING
-	ConnectorStateError       ConnectorState = outboxv1.Connector_STATE_ERROR
+	ConnectorStateUnspecified ConnectorState = outboxv1.ConnectorState_CONNECTOR_STATE_UNSPECIFIED
+	ConnectorStateActive      ConnectorState = outboxv1.ConnectorState_CONNECTOR_STATE_ACTIVE
+	ConnectorStateInactive    ConnectorState = outboxv1.ConnectorState_CONNECTOR_STATE_INACTIVE
+	ConnectorStateAuthorizing ConnectorState = outboxv1.ConnectorState_CONNECTOR_STATE_AUTHORIZING
+	ConnectorStateError       ConnectorState = outboxv1.ConnectorState_CONNECTOR_STATE_ERROR
+)
+
+// ConnectorKind indicates whether a Connector is managed, user, or bot.
+type ConnectorKind = outboxv1.ConnectorKind
+
+const (
+	ConnectorKindUnspecified ConnectorKind = outboxv1.ConnectorKind_CONNECTOR_KIND_UNSPECIFIED
+	ConnectorKindManaged     ConnectorKind = outboxv1.ConnectorKind_CONNECTOR_KIND_MANAGED
+	ConnectorKindUser        ConnectorKind = outboxv1.ConnectorKind_CONNECTOR_KIND_USER
+	ConnectorKindBot         ConnectorKind = outboxv1.ConnectorKind_CONNECTOR_KIND_BOT
+)
+
+// ConnectorReadiness indicates whether a Connector's provisioned resources are ready.
+type ConnectorReadiness = outboxv1.ConnectorReadiness
+
+const (
+	ConnectorReadinessUnspecified       ConnectorReadiness = outboxv1.ConnectorReadiness_CONNECTOR_READINESS_UNSPECIFIED
+	ConnectorReadinessReady             ConnectorReadiness = outboxv1.ConnectorReadiness_CONNECTOR_READINESS_READY
+	ConnectorReadinessPendingCompliance ConnectorReadiness = outboxv1.ConnectorReadiness_CONNECTOR_READINESS_PENDING_COMPLIANCE
+	ConnectorReadinessResourceNotActive ConnectorReadiness = outboxv1.ConnectorReadiness_CONNECTOR_READINESS_RESOURCE_NOT_ACTIVE
+	ConnectorReadinessResourceSuspended ConnectorReadiness = outboxv1.ConnectorReadiness_CONNECTOR_READINESS_RESOURCE_SUSPENDED
+)
+
+// ProvisionedResourceState indicates the state of a provisioned resource associated with a connector.
+// This enum is exported for completeness with the API schema; individual states are not currently
+// surfaced through the Connector type's ProvisionedResources field.
+type ProvisionedResourceState = outboxv1.ProvisionedResourceState
+
+const (
+	ProvisionedResourceStateUnspecified  ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_UNSPECIFIED
+	ProvisionedResourceStatePending      ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_PENDING
+	ProvisionedResourceStateProvisioning ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_PROVISIONING
+	ProvisionedResourceStateActive       ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_ACTIVE
+	ProvisionedResourceStateSuspended    ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_SUSPENDED
+	ProvisionedResourceStateReleased     ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_RELEASED
+	ProvisionedResourceStateFailed       ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_FAILED
+	ProvisionedResourceStateCancelling   ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_CANCELLING
+	ProvisionedResourceStatePorting      ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_PORTING
+	ProvisionedResourceStatePortFailed   ProvisionedResourceState = outboxv1.ProvisionedResourceState_PROVISIONED_RESOURCE_STATE_PORT_FAILED
 )
 
 // MessageDirection indicates whether a Message was sent or received.
@@ -92,4 +131,26 @@ const (
 	DestinationPayloadFormatUnspecified DestinationPayloadFormat = outboxv1.Destination_PAYLOAD_FORMAT_UNSPECIFIED
 	DestinationPayloadFormatJSON        DestinationPayloadFormat = outboxv1.Destination_PAYLOAD_FORMAT_JSON
 	DestinationPayloadFormatProtoBinary DestinationPayloadFormat = outboxv1.Destination_PAYLOAD_FORMAT_PROTO_BINARY
+)
+
+// TemplateStatus is the approval state of a Template.
+type TemplateStatus = outboxv1.TemplateStatus
+
+const (
+	TemplateStatusUnspecified TemplateStatus = outboxv1.TemplateStatus_TEMPLATE_STATUS_UNSPECIFIED
+	TemplateStatusPending     TemplateStatus = outboxv1.TemplateStatus_TEMPLATE_STATUS_PENDING
+	TemplateStatusApproved    TemplateStatus = outboxv1.TemplateStatus_TEMPLATE_STATUS_APPROVED
+	TemplateStatusRejected    TemplateStatus = outboxv1.TemplateStatus_TEMPLATE_STATUS_REJECTED
+	TemplateStatusPaused      TemplateStatus = outboxv1.TemplateStatus_TEMPLATE_STATUS_PAUSED
+	TemplateStatusDisabled    TemplateStatus = outboxv1.TemplateStatus_TEMPLATE_STATUS_DISABLED
+)
+
+// TemplateCategory classifies the purpose of a Template.
+type TemplateCategory = outboxv1.Template_Category
+
+const (
+	TemplateCategoryUnspecified    TemplateCategory = outboxv1.Template_CATEGORY_UNSPECIFIED
+	TemplateCategoryUtility        TemplateCategory = outboxv1.Template_CATEGORY_UTILITY
+	TemplateCategoryMarketing      TemplateCategory = outboxv1.Template_CATEGORY_MARKETING
+	TemplateCategoryAuthentication TemplateCategory = outboxv1.Template_CATEGORY_AUTHENTICATION
 )

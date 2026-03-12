@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	outbox "github.com/getoutbox/outbox-go"
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	outboxv1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 )
 
 // ExampleNew demonstrates creating an Outbox client.
@@ -115,8 +115,8 @@ func ExampleConnectorsService_Create_channelConfig() {
 	_ = client
 
 	input := outbox.CreateConnectorInput{
-		ChannelConfig: &outboxv1.Connector_Slack{
-			Slack: &outboxv1.SlackConfig{
+		ChannelConfig: &outboxv1.Connector_SlackBot{
+			SlackBot: &outboxv1.SlackBotConfig{
 				BotToken: "xoxb-...",
 			},
 		},

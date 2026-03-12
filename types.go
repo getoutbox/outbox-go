@@ -4,25 +4,6 @@ import (
 	"time"
 )
 
-// ChannelCapabilities describes which features a Channel supports.
-type ChannelCapabilities struct {
-	Groups                bool
-	Reactions             bool
-	Edits                 bool
-	Deletions             bool
-	ReadReceipts          bool
-	TypingIndicators      bool
-	SupportedContentTypes []string
-}
-
-// Channel represents a messaging platform (e.g. WhatsApp, Slack).
-// Channels are immutable system resources — they have no UpdateTime.
-type Channel struct {
-	ID           string
-	Capabilities *ChannelCapabilities
-	CreateTime   time.Time
-}
-
 // Account represents an end-user account on a Channel.
 type Account struct {
 	ID         string
@@ -37,19 +18,28 @@ type Account struct {
 // Connector bridges an Account to a Channel.
 // ChannelConfig holds the channel-specific configuration; its concrete type is
 // one of the Connector_* wrapper types defined in the outboxv1 package (e.g.
-// *outboxv1.Connector_Whatsapp). Use a type switch to access channel details.
+// *outboxv1.Connector_SlackBot). Use a type switch to access channel details.
 type Connector struct {
-	ID string
-	// Account is populated after creation completes.
-	// Nil while State is AUTHORIZING.
-	Account       *Account
-	State         ConnectorState
-	Tags          []string
-	ChannelConfig any // outboxv1.isConnector_ChannelConfig (unexported interface)
+	ID                   string
+	Kind                 ConnectorKind
+	State                ConnectorState
+	Readiness            ConnectorReadiness
+	ProvisionedResources []string
+	WebhookURL           string
+	DisplayName          string
+	Tags                 []string
+	ChannelConfig        any // outboxv1.isConnector_ChannelConfig (unexported interface)
 	// ErrorMessage contains a human-readable error detail when State is ERROR.
 	ErrorMessage string
 	CreateTime   time.Time
 	UpdateTime   time.Time
+}
+
+// ReauthorizeResult is returned by Connectors.Reauthorize.
+type ReauthorizeResult struct {
+	Connector *Connector
+	// AuthorizationURL is the OAuth URL to redirect the user to, if applicable.
+	AuthorizationURL string
 }
 
 // CreateConnectorResult is returned by Connectors.Create.
@@ -161,6 +151,29 @@ type ValidateFilterResult struct {
 	ErrorMessage *string
 	MatchedCount int32
 	TotalCount   int32
+}
+
+// Template is a pre-approved message template (e.g. WhatsApp template).
+// Templates are immutable after creation.
+type Template struct {
+	ID              string
+	ConnectorID     string
+	TemplateName    string
+	Language        string
+	Category        TemplateCategory
+	ComponentsJSON  string
+	Status          TemplateStatus
+	RejectionReason string
+	ExternalID      string
+	CreateTime      time.Time
+	UpdateTime      time.Time
+}
+
+// ListTemplatesResult is the paginated result of Templates.List.
+type ListTemplatesResult struct {
+	Items         []Template
+	NextPageToken string
+	TotalSize     int64
 }
 
 // DeliveryEvent is a sealed interface for all event types delivered to a

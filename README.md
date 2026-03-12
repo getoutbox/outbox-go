@@ -36,7 +36,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("sent:", result.ID)
+	fmt.Println("sent:", result.Message.ID)
 }
 ```
 
@@ -50,7 +50,7 @@ The client exposes five namespaces:
 | `client.Accounts` | Look up or manage end-user accounts |
 | `client.Messages` | Send, update, delete, and list messages |
 | `client.Destinations` | Configure push targets for delivery events |
-| `client.Channels` | List available messaging channels |
+| `client.Templates` | Create and manage message templates (e.g. WhatsApp templates) |
 
 ## Webhook verification
 
@@ -83,10 +83,10 @@ case *outbox.TypingIndicatorDeliveryEvent:
 
 ```go
 switch cfg := connector.ChannelConfig.(type) {
-case *outboxv1.Connector_Slack:
-	fmt.Println(cfg.Slack.BotToken)
-case *outboxv1.Connector_Whatsapp:
-	fmt.Println(cfg.Whatsapp.PhoneNumber)
+case *outboxv1.Connector_SlackBot:
+	fmt.Println(cfg.SlackBot.BotToken)
+case *outboxv1.Connector_WhatsappBot:
+	fmt.Println(cfg.WhatsappBot.AppId)
 }
 ```
 

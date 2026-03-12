@@ -3492,7 +3492,9 @@ const file_outbox_v1_destination_proto_rawDesc = "" +
 	"\x1aListDestinationTestResults\x12,.outbox.v1.ListDestinationTestResultsRequest\x1a-.outbox.v1.ListDestinationTestResultsResponse\"\a\xdaA\x04name\x12\x81\x01\n" +
 	"\x19ValidateDestinationFilter\x12+.outbox.v1.ValidateDestinationFilterRequest\x1a,.outbox.v1.ValidateDestinationFilterResponse\"\t\xdaA\x06filter\x12R\n" +
 	"\n" +
-	"PollEvents\x12\x1c.outbox.v1.PollEventsRequest\x1a\x1d.outbox.v1.PollEventsResponse\"\a\xdaA\x04nameBPZIgithub.com/getoutbox/outbox-internal/go/outbox-api/gen/outbox/v1;outboxv1\x92\x03\x02\b\x02b\beditionsp\xe8\a"
+	"PollEvents\x12\x1c.outbox.v1.PollEventsRequest\x1a\x1d.outbox.v1.PollEventsResponse\"\a\xdaA\x04nameB\xa2\x01\n" +
+	"\rcom.outbox.v1B\x10DestinationProtoP\x01Z5github.com/getoutbox/outbox-go/gen/outbox/v1;outboxv1\xa2\x02\x03OXX\xaa\x02\tOutbox.V1\xca\x02\tOutbox\\V1\xe2\x02\x15Outbox\\V1\\GPBMetadata\xea\x02\n" +
+	"Outbox::V1\x92\x03\x02\b\x02b\beditionsp\xe8\a"
 
 var (
 	file_outbox_v1_destination_proto_rawDescOnce sync.Once

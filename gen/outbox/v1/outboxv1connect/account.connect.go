@@ -8,7 +8,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	outboxv1 "github.com/getoutbox/outbox-go/outboxv1"
+	v1 "github.com/getoutbox/outbox-go/gen/outbox/v1"
 	http "net/http"
 	strings "strings"
 )
@@ -58,13 +58,13 @@ const (
 
 // AccountServiceClient is a client for the outbox.v1.AccountService service.
 type AccountServiceClient interface {
-	CreateAccount(context.Context, *connect.Request[outboxv1.CreateAccountRequest]) (*connect.Response[outboxv1.CreateAccountResponse], error)
-	GetAccount(context.Context, *connect.Request[outboxv1.GetAccountRequest]) (*connect.Response[outboxv1.GetAccountResponse], error)
-	ListAccounts(context.Context, *connect.Request[outboxv1.ListAccountsRequest]) (*connect.Response[outboxv1.ListAccountsResponse], error)
-	UpdateAccount(context.Context, *connect.Request[outboxv1.UpdateAccountRequest]) (*connect.Response[outboxv1.UpdateAccountResponse], error)
-	ClaimAccount(context.Context, *connect.Request[outboxv1.ClaimAccountRequest]) (*connect.Response[outboxv1.ClaimAccountResponse], error)
-	DeleteAccount(context.Context, *connect.Request[outboxv1.DeleteAccountRequest]) (*connect.Response[outboxv1.DeleteAccountResponse], error)
-	ResolveAccount(context.Context, *connect.Request[outboxv1.ResolveAccountRequest]) (*connect.Response[outboxv1.ResolveAccountResponse], error)
+	CreateAccount(context.Context, *connect.Request[v1.CreateAccountRequest]) (*connect.Response[v1.CreateAccountResponse], error)
+	GetAccount(context.Context, *connect.Request[v1.GetAccountRequest]) (*connect.Response[v1.GetAccountResponse], error)
+	ListAccounts(context.Context, *connect.Request[v1.ListAccountsRequest]) (*connect.Response[v1.ListAccountsResponse], error)
+	UpdateAccount(context.Context, *connect.Request[v1.UpdateAccountRequest]) (*connect.Response[v1.UpdateAccountResponse], error)
+	ClaimAccount(context.Context, *connect.Request[v1.ClaimAccountRequest]) (*connect.Response[v1.ClaimAccountResponse], error)
+	DeleteAccount(context.Context, *connect.Request[v1.DeleteAccountRequest]) (*connect.Response[v1.DeleteAccountResponse], error)
+	ResolveAccount(context.Context, *connect.Request[v1.ResolveAccountRequest]) (*connect.Response[v1.ResolveAccountResponse], error)
 }
 
 // NewAccountServiceClient constructs a client for the outbox.v1.AccountService service. By default,
@@ -76,45 +76,45 @@ type AccountServiceClient interface {
 // http://api.acme.com or https://acme.com/grpc).
 func NewAccountServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) AccountServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	accountServiceMethods := outboxv1.File_outbox_v1_account_proto.Services().ByName("AccountService").Methods()
+	accountServiceMethods := v1.File_outbox_v1_account_proto.Services().ByName("AccountService").Methods()
 	return &accountServiceClient{
-		createAccount: connect.NewClient[outboxv1.CreateAccountRequest, outboxv1.CreateAccountResponse](
+		createAccount: connect.NewClient[v1.CreateAccountRequest, v1.CreateAccountResponse](
 			httpClient,
 			baseURL+AccountServiceCreateAccountProcedure,
 			connect.WithSchema(accountServiceMethods.ByName("CreateAccount")),
 			connect.WithClientOptions(opts...),
 		),
-		getAccount: connect.NewClient[outboxv1.GetAccountRequest, outboxv1.GetAccountResponse](
+		getAccount: connect.NewClient[v1.GetAccountRequest, v1.GetAccountResponse](
 			httpClient,
 			baseURL+AccountServiceGetAccountProcedure,
 			connect.WithSchema(accountServiceMethods.ByName("GetAccount")),
 			connect.WithClientOptions(opts...),
 		),
-		listAccounts: connect.NewClient[outboxv1.ListAccountsRequest, outboxv1.ListAccountsResponse](
+		listAccounts: connect.NewClient[v1.ListAccountsRequest, v1.ListAccountsResponse](
 			httpClient,
 			baseURL+AccountServiceListAccountsProcedure,
 			connect.WithSchema(accountServiceMethods.ByName("ListAccounts")),
 			connect.WithClientOptions(opts...),
 		),
-		updateAccount: connect.NewClient[outboxv1.UpdateAccountRequest, outboxv1.UpdateAccountResponse](
+		updateAccount: connect.NewClient[v1.UpdateAccountRequest, v1.UpdateAccountResponse](
 			httpClient,
 			baseURL+AccountServiceUpdateAccountProcedure,
 			connect.WithSchema(accountServiceMethods.ByName("UpdateAccount")),
 			connect.WithClientOptions(opts...),
 		),
-		claimAccount: connect.NewClient[outboxv1.ClaimAccountRequest, outboxv1.ClaimAccountResponse](
+		claimAccount: connect.NewClient[v1.ClaimAccountRequest, v1.ClaimAccountResponse](
 			httpClient,
 			baseURL+AccountServiceClaimAccountProcedure,
 			connect.WithSchema(accountServiceMethods.ByName("ClaimAccount")),
 			connect.WithClientOptions(opts...),
 		),
-		deleteAccount: connect.NewClient[outboxv1.DeleteAccountRequest, outboxv1.DeleteAccountResponse](
+		deleteAccount: connect.NewClient[v1.DeleteAccountRequest, v1.DeleteAccountResponse](
 			httpClient,
 			baseURL+AccountServiceDeleteAccountProcedure,
 			connect.WithSchema(accountServiceMethods.ByName("DeleteAccount")),
 			connect.WithClientOptions(opts...),
 		),
-		resolveAccount: connect.NewClient[outboxv1.ResolveAccountRequest, outboxv1.ResolveAccountResponse](
+		resolveAccount: connect.NewClient[v1.ResolveAccountRequest, v1.ResolveAccountResponse](
 			httpClient,
 			baseURL+AccountServiceResolveAccountProcedure,
 			connect.WithSchema(accountServiceMethods.ByName("ResolveAccount")),
@@ -125,59 +125,59 @@ func NewAccountServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 
 // accountServiceClient implements AccountServiceClient.
 type accountServiceClient struct {
-	createAccount  *connect.Client[outboxv1.CreateAccountRequest, outboxv1.CreateAccountResponse]
-	getAccount     *connect.Client[outboxv1.GetAccountRequest, outboxv1.GetAccountResponse]
-	listAccounts   *connect.Client[outboxv1.ListAccountsRequest, outboxv1.ListAccountsResponse]
-	updateAccount  *connect.Client[outboxv1.UpdateAccountRequest, outboxv1.UpdateAccountResponse]
-	claimAccount   *connect.Client[outboxv1.ClaimAccountRequest, outboxv1.ClaimAccountResponse]
-	deleteAccount  *connect.Client[outboxv1.DeleteAccountRequest, outboxv1.DeleteAccountResponse]
-	resolveAccount *connect.Client[outboxv1.ResolveAccountRequest, outboxv1.ResolveAccountResponse]
+	createAccount  *connect.Client[v1.CreateAccountRequest, v1.CreateAccountResponse]
+	getAccount     *connect.Client[v1.GetAccountRequest, v1.GetAccountResponse]
+	listAccounts   *connect.Client[v1.ListAccountsRequest, v1.ListAccountsResponse]
+	updateAccount  *connect.Client[v1.UpdateAccountRequest, v1.UpdateAccountResponse]
+	claimAccount   *connect.Client[v1.ClaimAccountRequest, v1.ClaimAccountResponse]
+	deleteAccount  *connect.Client[v1.DeleteAccountRequest, v1.DeleteAccountResponse]
+	resolveAccount *connect.Client[v1.ResolveAccountRequest, v1.ResolveAccountResponse]
 }
 
 // CreateAccount calls outbox.v1.AccountService.CreateAccount.
-func (c *accountServiceClient) CreateAccount(ctx context.Context, req *connect.Request[outboxv1.CreateAccountRequest]) (*connect.Response[outboxv1.CreateAccountResponse], error) {
+func (c *accountServiceClient) CreateAccount(ctx context.Context, req *connect.Request[v1.CreateAccountRequest]) (*connect.Response[v1.CreateAccountResponse], error) {
 	return c.createAccount.CallUnary(ctx, req)
 }
 
 // GetAccount calls outbox.v1.AccountService.GetAccount.
-func (c *accountServiceClient) GetAccount(ctx context.Context, req *connect.Request[outboxv1.GetAccountRequest]) (*connect.Response[outboxv1.GetAccountResponse], error) {
+func (c *accountServiceClient) GetAccount(ctx context.Context, req *connect.Request[v1.GetAccountRequest]) (*connect.Response[v1.GetAccountResponse], error) {
 	return c.getAccount.CallUnary(ctx, req)
 }
 
 // ListAccounts calls outbox.v1.AccountService.ListAccounts.
-func (c *accountServiceClient) ListAccounts(ctx context.Context, req *connect.Request[outboxv1.ListAccountsRequest]) (*connect.Response[outboxv1.ListAccountsResponse], error) {
+func (c *accountServiceClient) ListAccounts(ctx context.Context, req *connect.Request[v1.ListAccountsRequest]) (*connect.Response[v1.ListAccountsResponse], error) {
 	return c.listAccounts.CallUnary(ctx, req)
 }
 
 // UpdateAccount calls outbox.v1.AccountService.UpdateAccount.
-func (c *accountServiceClient) UpdateAccount(ctx context.Context, req *connect.Request[outboxv1.UpdateAccountRequest]) (*connect.Response[outboxv1.UpdateAccountResponse], error) {
+func (c *accountServiceClient) UpdateAccount(ctx context.Context, req *connect.Request[v1.UpdateAccountRequest]) (*connect.Response[v1.UpdateAccountResponse], error) {
 	return c.updateAccount.CallUnary(ctx, req)
 }
 
 // ClaimAccount calls outbox.v1.AccountService.ClaimAccount.
-func (c *accountServiceClient) ClaimAccount(ctx context.Context, req *connect.Request[outboxv1.ClaimAccountRequest]) (*connect.Response[outboxv1.ClaimAccountResponse], error) {
+func (c *accountServiceClient) ClaimAccount(ctx context.Context, req *connect.Request[v1.ClaimAccountRequest]) (*connect.Response[v1.ClaimAccountResponse], error) {
 	return c.claimAccount.CallUnary(ctx, req)
 }
 
 // DeleteAccount calls outbox.v1.AccountService.DeleteAccount.
-func (c *accountServiceClient) DeleteAccount(ctx context.Context, req *connect.Request[outboxv1.DeleteAccountRequest]) (*connect.Response[outboxv1.DeleteAccountResponse], error) {
+func (c *accountServiceClient) DeleteAccount(ctx context.Context, req *connect.Request[v1.DeleteAccountRequest]) (*connect.Response[v1.DeleteAccountResponse], error) {
 	return c.deleteAccount.CallUnary(ctx, req)
 }
 
 // ResolveAccount calls outbox.v1.AccountService.ResolveAccount.
-func (c *accountServiceClient) ResolveAccount(ctx context.Context, req *connect.Request[outboxv1.ResolveAccountRequest]) (*connect.Response[outboxv1.ResolveAccountResponse], error) {
+func (c *accountServiceClient) ResolveAccount(ctx context.Context, req *connect.Request[v1.ResolveAccountRequest]) (*connect.Response[v1.ResolveAccountResponse], error) {
 	return c.resolveAccount.CallUnary(ctx, req)
 }
 
 // AccountServiceHandler is an implementation of the outbox.v1.AccountService service.
 type AccountServiceHandler interface {
-	CreateAccount(context.Context, *connect.Request[outboxv1.CreateAccountRequest]) (*connect.Response[outboxv1.CreateAccountResponse], error)
-	GetAccount(context.Context, *connect.Request[outboxv1.GetAccountRequest]) (*connect.Response[outboxv1.GetAccountResponse], error)
-	ListAccounts(context.Context, *connect.Request[outboxv1.ListAccountsRequest]) (*connect.Response[outboxv1.ListAccountsResponse], error)
-	UpdateAccount(context.Context, *connect.Request[outboxv1.UpdateAccountRequest]) (*connect.Response[outboxv1.UpdateAccountResponse], error)
-	ClaimAccount(context.Context, *connect.Request[outboxv1.ClaimAccountRequest]) (*connect.Response[outboxv1.ClaimAccountResponse], error)
-	DeleteAccount(context.Context, *connect.Request[outboxv1.DeleteAccountRequest]) (*connect.Response[outboxv1.DeleteAccountResponse], error)
-	ResolveAccount(context.Context, *connect.Request[outboxv1.ResolveAccountRequest]) (*connect.Response[outboxv1.ResolveAccountResponse], error)
+	CreateAccount(context.Context, *connect.Request[v1.CreateAccountRequest]) (*connect.Response[v1.CreateAccountResponse], error)
+	GetAccount(context.Context, *connect.Request[v1.GetAccountRequest]) (*connect.Response[v1.GetAccountResponse], error)
+	ListAccounts(context.Context, *connect.Request[v1.ListAccountsRequest]) (*connect.Response[v1.ListAccountsResponse], error)
+	UpdateAccount(context.Context, *connect.Request[v1.UpdateAccountRequest]) (*connect.Response[v1.UpdateAccountResponse], error)
+	ClaimAccount(context.Context, *connect.Request[v1.ClaimAccountRequest]) (*connect.Response[v1.ClaimAccountResponse], error)
+	DeleteAccount(context.Context, *connect.Request[v1.DeleteAccountRequest]) (*connect.Response[v1.DeleteAccountResponse], error)
+	ResolveAccount(context.Context, *connect.Request[v1.ResolveAccountRequest]) (*connect.Response[v1.ResolveAccountResponse], error)
 }
 
 // NewAccountServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -186,7 +186,7 @@ type AccountServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewAccountServiceHandler(svc AccountServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	accountServiceMethods := outboxv1.File_outbox_v1_account_proto.Services().ByName("AccountService").Methods()
+	accountServiceMethods := v1.File_outbox_v1_account_proto.Services().ByName("AccountService").Methods()
 	accountServiceCreateAccountHandler := connect.NewUnaryHandler(
 		AccountServiceCreateAccountProcedure,
 		svc.CreateAccount,
@@ -254,30 +254,30 @@ func NewAccountServiceHandler(svc AccountServiceHandler, opts ...connect.Handler
 // UnimplementedAccountServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedAccountServiceHandler struct{}
 
-func (UnimplementedAccountServiceHandler) CreateAccount(context.Context, *connect.Request[outboxv1.CreateAccountRequest]) (*connect.Response[outboxv1.CreateAccountResponse], error) {
+func (UnimplementedAccountServiceHandler) CreateAccount(context.Context, *connect.Request[v1.CreateAccountRequest]) (*connect.Response[v1.CreateAccountResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.AccountService.CreateAccount is not implemented"))
 }
 
-func (UnimplementedAccountServiceHandler) GetAccount(context.Context, *connect.Request[outboxv1.GetAccountRequest]) (*connect.Response[outboxv1.GetAccountResponse], error) {
+func (UnimplementedAccountServiceHandler) GetAccount(context.Context, *connect.Request[v1.GetAccountRequest]) (*connect.Response[v1.GetAccountResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.AccountService.GetAccount is not implemented"))
 }
 
-func (UnimplementedAccountServiceHandler) ListAccounts(context.Context, *connect.Request[outboxv1.ListAccountsRequest]) (*connect.Response[outboxv1.ListAccountsResponse], error) {
+func (UnimplementedAccountServiceHandler) ListAccounts(context.Context, *connect.Request[v1.ListAccountsRequest]) (*connect.Response[v1.ListAccountsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.AccountService.ListAccounts is not implemented"))
 }
 
-func (UnimplementedAccountServiceHandler) UpdateAccount(context.Context, *connect.Request[outboxv1.UpdateAccountRequest]) (*connect.Response[outboxv1.UpdateAccountResponse], error) {
+func (UnimplementedAccountServiceHandler) UpdateAccount(context.Context, *connect.Request[v1.UpdateAccountRequest]) (*connect.Response[v1.UpdateAccountResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.AccountService.UpdateAccount is not implemented"))
 }
 
-func (UnimplementedAccountServiceHandler) ClaimAccount(context.Context, *connect.Request[outboxv1.ClaimAccountRequest]) (*connect.Response[outboxv1.ClaimAccountResponse], error) {
+func (UnimplementedAccountServiceHandler) ClaimAccount(context.Context, *connect.Request[v1.ClaimAccountRequest]) (*connect.Response[v1.ClaimAccountResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.AccountService.ClaimAccount is not implemented"))
 }
 
-func (UnimplementedAccountServiceHandler) DeleteAccount(context.Context, *connect.Request[outboxv1.DeleteAccountRequest]) (*connect.Response[outboxv1.DeleteAccountResponse], error) {
+func (UnimplementedAccountServiceHandler) DeleteAccount(context.Context, *connect.Request[v1.DeleteAccountRequest]) (*connect.Response[v1.DeleteAccountResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.AccountService.DeleteAccount is not implemented"))
 }
 
-func (UnimplementedAccountServiceHandler) ResolveAccount(context.Context, *connect.Request[outboxv1.ResolveAccountRequest]) (*connect.Response[outboxv1.ResolveAccountResponse], error) {
+func (UnimplementedAccountServiceHandler) ResolveAccount(context.Context, *connect.Request[v1.ResolveAccountRequest]) (*connect.Response[v1.ResolveAccountResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("outbox.v1.AccountService.ResolveAccount is not implemented"))
 }
